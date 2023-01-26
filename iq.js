@@ -61,12 +61,19 @@ class IQOption {
   }
 
   socketClient() {
-    this.runTicker();
     this.socket.on("connect", () => {
       console.log(`connected with id ${this.socket.id}`);
-      if (this.frame) {
-        clearInterval(this.frame);
-      }
+    });
+
+    this.socket.on("subscribe", (active_id) => {
+      console.log(
+        `subscribed to ${
+          active_id === 1 ? "EURUSD" : "EURUSD-OTC"
+        } currency pair`
+      );
+      this.active_id = active_id;
+      this.authentication();
+      this.runTicker();
       this.sendTicker();
     });
 
